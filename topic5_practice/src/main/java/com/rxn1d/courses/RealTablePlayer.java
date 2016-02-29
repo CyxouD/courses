@@ -33,23 +33,24 @@ public class RealTablePlayer extends AbstractPlayer{
 	public boolean isMadeBet() {
 		return madeBet;
 	}
-	
-	public boolean equals(Object o){
-		if (o == null) return false;
-		
-		if (!(o instanceof RealTablePlayer)) return false;
-		RealTablePlayer that = (RealTablePlayer) o;
-		
-		if (this.name.equals(that.name)) return true;
-		return false;
-		
-	}
+
 	
 	public void setMadeBet(boolean madeBet) {
 		this.madeBet = madeBet;
 	}
 
-	public int hashCode(){
+    public boolean equals(Object o){
+        if (o == null) return false;
+
+        if (!(o instanceof RealTablePlayer)) return false;
+        RealTablePlayer that = (RealTablePlayer) o;
+
+        if (this.name.equals(that.name)) return true;
+        return false;
+
+    }
+
+    public int hashCode(){
 		return name.hashCode();
 	}
 	

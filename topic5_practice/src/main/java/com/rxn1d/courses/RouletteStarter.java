@@ -13,12 +13,7 @@ public class RouletteStarter {
 		in = ConsoleReader.readFromConsole();
 		if (in.length == 0) continue;
 		else if (in[0].equals("REAL")){
-            System.out.println("Type \"EXIT\" to finish the application");
-            System.out.println("Use \"<NEW_USER>< ><YOUR_NAME>< ><YOUR_BALANCE>\" to register yourself for the game");
-            System.out.println("Use \"<BET>< ><YOUR_NAME>< ><BET>< ><BET_TYPE>\" to make a bet");
-            System.out.println("Bet types: [RED,BLACK,ODD,EVEN,SMALL,BIG,STRAIGHT_UP <YOUR_NUMBER>]");
-            System.out.println("Bet between [1;500]");
-            System.out.println("For the organisator use \"PLAY_GAME\" to start the game");
+            printRules();
 			GameTableRealPlayers gt = new GameTableRealPlayers();
 			
 			while (true){
@@ -98,16 +93,36 @@ public class RouletteStarter {
 			 }
 		}
 		else if (in[0].equals("TEST")){
-			System.out.println("Enter \"TEST_START <n_Players>< ><players_Balance>< ><Players_bet>\"");
-			in = ConsoleReader.readFromConsole();
-			if (in[0].equals("TEST_START")){
-				GameTableRandomPlayers gameTable = new GameTableRandomPlayers(Integer.parseInt(in[1]),Double.parseDouble(in[2]), Double.parseDouble(in[3]));
-				gameTable.startGame();
-				GameTableStats.printStats();
-			}
-			else{
-				System.out.println("Incorrect input.Try again");
-			}
+            while (true) {
+                System.out.println("Enter \"TEST_START <n_Players>< ><players_Balance>< ><Players_bet>\"");
+                in = ConsoleReader.readFromConsole();
+                int nPlayers;
+                double balancePlayers;
+                double betPlayers;
+                if (in[0].equals("TEST_START")) {
+                    nPlayers = Integer.parseInt(in[1]);
+                    if (nPlayers < 0 || nPlayers > 5) {
+                        System.out.println("Number of players must be [0;5]");
+                        continue;
+                    }
+                    balancePlayers = Double.parseDouble(in[2]);
+                    if (balancePlayers < 1) {
+                        System.out.println("Balance of players should be at least more than 1 to make one bet");
+                        continue;
+                    }
+                    betPlayers = Double.parseDouble(in[3]);
+                    if (betPlayers < 1 || betPlayers > 500) {
+                        System.out.println("Bets must be between [1;500]");
+                        continue;
+                    }
+                    GameTableRandomPlayers gameTable = new GameTableRandomPlayers(Integer.parseInt(in[1]), Double.parseDouble(in[2]), Double.parseDouble(in[3]));
+                    gameTable.startGame();
+                    GameTableStats.printStats();
+                    break;
+                } else {
+                    System.out.println("Incorrect input.Try again");
+                }
+            }
 		}
 		else{
 			System.out.println("Incorrect input.Try again");
@@ -116,6 +131,15 @@ public class RouletteStarter {
 			 
 		}
 	}
+
+    private static void printRules(){
+        System.out.println("Type \"EXIT\" to finish the application");
+        System.out.println("Use \"<NEW_USER>< ><YOUR_NAME>< ><YOUR_BALANCE>\" to register yourself for the game");
+        System.out.println("Use \"<BET>< ><YOUR_NAME>< ><BET>< ><BET_TYPE>\" to make a bet");
+        System.out.println("Bet types: [RED,BLACK,ODD,EVEN,SMALL,BIG,STRAIGHT_UP <YOUR_NUMBER>]");
+        System.out.println("Bet between [1;500]");
+        System.out.println("For the organisator use \"PLAY_GAME\" to start the game");
+    }
 }
 		
 
