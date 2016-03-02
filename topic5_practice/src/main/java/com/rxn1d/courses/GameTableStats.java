@@ -89,9 +89,9 @@ public class GameTableStats {
 	
 	public static void printStats(){
 		System.out.println("STATS");
-    	System.out.println("Total bets count = "+GameTableStats.getCasinoBalance());
+    	System.out.println("Total bets count = "+GameTableStats.getBetsByTypeFrequency());
     	System.out.println("Total bets by type "+GameTableStats.getTotalBetsCount());
-    	System.out.println("Balance = "+GameTableStats.getBetsByTypeFrequency());
+    	System.out.println("Balance = "+GameTableStats.getCasinoBalance());
     	System.out.println("Most frequent number = "+GameTableStats.getMostFrequentNumber());
     	System.out.println("Players "+GameTableStats.getBalanceOfTablePlayers());	
 	}

@@ -1,18 +1,25 @@
 package com.rxn1d.courses;
 
 public class GameTableRealPlayers extends AbstractGameTable {
-	private boolean isGameStarted = false;
+	private boolean gameStarted = false;
+	private boolean firstBetRoundFinished;
 	
 	
 	public boolean addNewPlayer(String player){ 
 		if (players.size() >= 5){
-			setGameStarted(true);
+			beginTheSession();
 			return false;
 		}
 		
 		String playerName = player.split(" ")[0];
-		String playerBalance = player.split(" ")[1];
-		boolean isAdded = players.add(new RealTablePlayer(Double.parseDouble(playerBalance), playerName));
+		double playerBalance = Double.parseDouble(player.split(" ")[1]);
+		if (playerBalance < 1){
+			System.out.println("NEW_USER NOT ACCEPTED");
+			System.out.println("Player's balance less than one");
+			return false;
+		}
+
+		boolean isAdded = players.add(new RealTablePlayer(playerBalance, playerName));
 		if (isAdded){
 			System.out.println("New user with name = "+playerName+" and balance = "+playerBalance+" is added to table");
 			return true;
@@ -20,13 +27,14 @@ public class GameTableRealPlayers extends AbstractGameTable {
 		return false;
 		
 	}
+
 	
 	public RealTablePlayer findPlayerWithName(String name){
 		for (AbstractPlayer p : players){
 			if (p.getName().equals(name)) return (RealTablePlayer) p;
 		}
 		System.out.println("BET NOT ACCEPTED");
-		System.out.println("Player with this name is not registered");
+		System.out.println("Player with this name "+ name+ " is not registered");
 		return null;
 	}
 	
@@ -34,6 +42,10 @@ public class GameTableRealPlayers extends AbstractGameTable {
 		for (AbstractPlayer p : players){
 			RealTablePlayer realPlayer = (RealTablePlayer) p;
 			if (!realPlayer.isMadeBet() && realPlayer.isInGame()) return false;
+		}
+		if(!firstBetRoundFinished){
+			firstBetRoundFinished = true;
+			beginTheSession();
 		}
 		return true;
 	}
@@ -44,12 +56,13 @@ public class GameTableRealPlayers extends AbstractGameTable {
     	
     }
 
+
 	public boolean isGameStarted() {
-		return isGameStarted;
+		return gameStarted;
 	}
 
-	public void setGameStarted(boolean isGameStarted) {
-		this.isGameStarted = isGameStarted;
+	public void beginTheSession() {
+		this.gameStarted = true;
 		GameTableStats.registerHashPlayersForDatabase(players);
 		
 	}
