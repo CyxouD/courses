@@ -85,7 +85,7 @@
 * Обработка исключений
 * throw, throws, try{}catch(){}, finally
 
-ДЗ:
+[ДЗ #6](https://github.com/rxn1d/courses/blob/master/topic6/topic6_home_work.md)
 * Input\Output streams
 * Работа с файловой системой
 * Улучшение рулетки
@@ -96,5 +96,6 @@
 * Интерфейс Set и его имплементации
 * Интерфейс Map и его имплементации
 
-ДЗ:
+[ДЗ #8](https://github.com/rxn1d/courses/blob/master/topic8/topic8_home_work.md)
 * Реализовать связный список
+* Сделать анализатор текста
