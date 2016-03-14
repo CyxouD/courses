@@ -183,5 +183,6 @@ public class SinglyLinkedList<E> implements MyList {
     }
 
     public static void main(String[] args){
+        //kyky
     }
 }
