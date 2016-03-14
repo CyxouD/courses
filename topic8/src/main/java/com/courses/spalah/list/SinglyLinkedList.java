@@ -48,7 +48,7 @@ public class SinglyLinkedList<E> implements MyList {
 
     @Override
     public void add(int index, Object element) {
-        if (index < 0 || index >= size) throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index >= size) throw new ListIndexOutOfBoundsException();
         size++;
 
         if (isIndexAtCornerCases(index)){
@@ -67,7 +67,7 @@ public class SinglyLinkedList<E> implements MyList {
 
     @Override
     public void remove(int index) {
-        if (index < 0 || index >= size) throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index >= size) throw new ListIndexOutOfBoundsException();
         size--;
 
         if (index == 0){
@@ -83,14 +83,14 @@ public class SinglyLinkedList<E> implements MyList {
 
     @Override
     public Object get(int index) {
-        if (index < 0 || index >= size) throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index >= size) throw new ListIndexOutOfBoundsException();
         return trackNodeAtIndex(index).element;
     }
 
 
     @Override
     public Object set(int index, Object element) {
-        if (index < 0 || index >= size) throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index >= size) throw new ListIndexOutOfBoundsException();
 
         Node foundNode = trackNodeAtIndex(index);
         E savedElement = foundNode.element;
@@ -175,7 +175,11 @@ public class SinglyLinkedList<E> implements MyList {
         public void remove() {
             SinglyLinkedList.this.remove(0);
         }
-        
+
+    }
+
+    private static class ListIndexOutOfBoundsException extends IndexOutOfBoundsException{
+
     }
 
     public static void main(String[] args){
