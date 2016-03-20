@@ -8,6 +8,8 @@ public class ListFactory {
         if (listType == ListType.SINGLY_LINKED_LIST) {
             return new SinglyLinkedList<E>();
         }
-        return null;
+            // возвращаем вашу имплементацию односвязного списка
+            return null;
+        }
     }
-}
+

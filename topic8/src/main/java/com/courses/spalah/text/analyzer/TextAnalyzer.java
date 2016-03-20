@@ -1,10 +1,11 @@
 package com.courses.spalah.text.analyzer;
 
 /**
- * @author Ievgen Tararaka
+ * Created by Dima on 18.03.2016.
  */
 public class TextAnalyzer {
-    public static void main(String[] args) {
-        // Входная точка для аналайзера текста
+
+    public static void main(String[] args){
+        TextReader.readTextFromFile("topic8\\src\\main\\resources\\text_sample.txt");
     }
 }
