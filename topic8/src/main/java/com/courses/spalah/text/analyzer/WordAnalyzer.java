@@ -7,6 +7,8 @@ import java.util.Set;
 
 class WordAnalyzer {
 
+    private final int UNIQUE_COUNT = 1;
+
     private Map<String, Integer> wordCount; // map for storing words and number of their occurrences in the text
     private Map<String, Integer> symbolCount; // map for storing symbols and number of their occurrences int the text
 
@@ -99,7 +101,7 @@ class WordAnalyzer {
 
 
     private boolean isWordUnique(int count){
-        return count == 1;
+        return count == UNIQUE_COUNT;
     }
 
 }
