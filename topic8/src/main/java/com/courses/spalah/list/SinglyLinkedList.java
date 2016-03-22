@@ -2,12 +2,13 @@ package com.courses.spalah.list;
 
 import com.sun.prism.shader.Solid_TextureFirstPassLCD_AlphaTest_Loader;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
  * Created by Dima on 13.03.2016.
  */
-public class SinglyLinkedList<E> implements MyList {
+public class SinglyLinkedList<E> implements MyList<E> {
     private int size;
     private Node first;
     private Node last;
@@ -34,7 +35,7 @@ public class SinglyLinkedList<E> implements MyList {
     }
 
     @Override
-    public boolean add(Object element) {
+    public boolean add(E element) {
         Node oldLast = last;
         last = new Node();
         last.element = (E) element;
@@ -47,49 +48,49 @@ public class SinglyLinkedList<E> implements MyList {
     }
 
     @Override
-    public void add(int index, Object element) {
+    public void add(int index, E element) {
         if (index < 0 || index >= size) throw new ListIndexOutOfBoundsException();
-        size++;
 
         if (isIndexAtCornerCases(index)){
             processCornerCase(index, (E) element);
-            return;
         }
-
-        Node foundNode = trackNodeAtIndex(index - 1);
-        Node newNode = new Node();
-        newNode.element = (E) element;
-        newNode.next = foundNode.next;
-        foundNode.next = newNode;
-
+        else {
+            Node foundNode = trackNodeAtIndex(index - 1);
+            Node newNode = new Node();
+            newNode.element = (E) element;
+            newNode.next = foundNode.next;
+            foundNode.next = newNode;
+        }
+        size++;
     }
 
 
     @Override
     public void remove(int index) {
         if (index < 0 || index >= size) throw new ListIndexOutOfBoundsException();
-        size--;
 
         if (index == 0){
             first = first.next;
-            return;
         }
-
-        Node foundNode = trackNodeAtIndex(index - 1);
-        if (index == size)
-            last = foundNode;
-        foundNode.next = foundNode.next.next;
+        else {
+            Node foundNode = trackNodeAtIndex(index - 1);
+            if (index == size) {
+                last = foundNode;
+            }
+            foundNode.next = foundNode.next.next;
+        }
+        size--;
     }
 
     @Override
-    public Object get(int index) {
+    public E get(int index) {
         if (index < 0 || index >= size) throw new ListIndexOutOfBoundsException();
         return trackNodeAtIndex(index).element;
     }
 
 
     @Override
-    public Object set(int index, Object element) {
+    public E set(int index, E element) {
         if (index < 0 || index >= size) throw new ListIndexOutOfBoundsException();
 
         Node foundNode = trackNodeAtIndex(index);
@@ -100,8 +101,8 @@ public class SinglyLinkedList<E> implements MyList {
 
 
     @Override
-    public boolean contains(Object element) {
-        for (Object e : this){
+    public boolean contains(E element) {
+        for (E e : this){
             if (e.equals(element)) return true;
         }
         return false;
@@ -173,7 +174,8 @@ public class SinglyLinkedList<E> implements MyList {
 
         @Override
         public void remove() {
-            SinglyLinkedList.this.remove(0);
+            SinglyLinkedList.this.remove(curN);
+            sizeList--;
         }
 
     }
@@ -183,6 +185,25 @@ public class SinglyLinkedList<E> implements MyList {
     }
 
     public static void main(String[] args){
-        //kyky
+
+        Car civic = new Car(20_000, "Honda Civic");
+        Car m3 = new Car(50_000, "MMW M3");
+        Car auris = new Car(18_000, "Toyota auris");
+        Car sx4 = new Car(14_000, "Suzuki SX4");
+        ArrayList<Car> carList = new ArrayList<>();
+       // carList.add(civic);
+       // carList.add(m3);
+        carList.add(auris);
+        carList.add(sx4);
+
+        Iterator<Car> iterator = carList.iterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+            iterator.next();
+            iterator.remove(); // auris // [empty]
+            System.out.println(carList.size());
+        }
+        System.out.println(carList.isEmpty());
+
     }
 }

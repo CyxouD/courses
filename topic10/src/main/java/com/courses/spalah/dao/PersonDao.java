@@ -1,8 +1,5 @@
 package com.courses.spalah.dao;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -24,50 +21,48 @@ public class PersonDao implements Dao<Person> {
 
     @Override
     public List<Person> findAll() {
-        List<Person> listPerson = new ArrayList<Person>();
+        List<Person> listPerson = new ArrayList<>();
+        try(Scanner scanner = new Scanner(fileReader.readFile())) {
+            scanner.useDelimiter(PersonDaoHelper.patternDelimiter);
 
-        Scanner scanner = new Scanner(fileReader.readFile());
-        scanner.useDelimiter(PersonDaoHelper.patternDelimiter);
+            long personId;
+            String personFirstName;
+            String personLastName;
+            String personAddress;
+            while (scanner.hasNext()) {
+                personId = Long.parseLong(scanner.next());
+                personFirstName = scanner.next();
+                personLastName = scanner.next();
+                personAddress = scanner.next();
+                listPerson.add(new Person(personId, personFirstName, personLastName, personAddress));
+            }
 
-        long personId;
-        String personFirstName;
-        String personLastName;
-        String personAddress;
-        while (scanner.hasNext()){
-            personId = Long.parseLong(scanner.next());
-            personFirstName = scanner.next();
-            personLastName = scanner.next();
-            personAddress = scanner.next();
-            listPerson.add(new Person(personId, personFirstName, personLastName, personAddress));
+            return listPerson;
         }
-
-        return listPerson;
     }
 
     @Override
     public Person findById(Long id) {
-        Scanner scanner = new Scanner(fileReader.readFile());
-        scanner.useDelimiter(PersonDaoHelper.patternDelimiter);
+        try(Scanner scanner = new Scanner(fileReader.readFile())) {
+            scanner.useDelimiter(PersonDaoHelper.patternDelimiter);
 
-        long personId;
-        String personFirstName;
-        String personLastName;
-        String personAddress;
-        while (scanner.hasNext()){
-            personId = Long.parseLong(scanner.next());
-            if (personId == id){
-                personFirstName = scanner.next();
-                personLastName = scanner.next();
-                personAddress = scanner.next();
-                scanner.close();
-                return new Person(personId,personFirstName,personLastName,personAddress);
+            long personId;
+            String personFirstName;
+            String personLastName;
+            String personAddress;
+            while (scanner.hasNext()) {
+                personId = Long.parseLong(scanner.next());
+                if (personId == id) {
+                    personFirstName = scanner.next();
+                    personLastName = scanner.next();
+                    personAddress = scanner.next();
+                    return new Person(personId, personFirstName, personLastName, personAddress);
+                } else {
+                    scanner.nextLine();
+                }
             }
-            else{
-                scanner.nextLine();
-            }
+            return null;
         }
-        scanner.close();
-        return null;
     }
 
     @Override
@@ -79,7 +74,7 @@ public class PersonDao implements Dao<Person> {
             return false;
         }
         else {
-            PersonDaoHelper.writeToFile(outputFileInfo,fileReader.getPathToFile());
+            fileReader.writeToThisFile(outputFileInfo,fileReader.getPathToFile());
             return true;
         }
     }
@@ -87,20 +82,28 @@ public class PersonDao implements Dao<Person> {
     @Override
     public boolean insert(Person entity) {
         StringBuilder outputFileInfo = new StringBuilder().append(fileReader.readFile());
-
-        boolean isInserted= PersonDaoHelper.insertNewStr(outputFileInfo, entity);
+        boolean isInserted= PersonDaoHelper.insertStr(outputFileInfo, entity);
         if (!isInserted){
             return false;
         }
         else {
-            PersonDaoHelper.writeToFile(outputFileInfo,fileReader.getPathToFile());
+            fileReader.writeToThisFile(outputFileInfo,fileReader.getPathToFile());
             return true;
         }
     }
 
     @Override
     public Person remove(Long id) {
-        return null;
+        StringBuilder outputFileInfo = new StringBuilder().append(fileReader.readFile());
+
+        Person deletedPerson = PersonDaoHelper.deleteStr(outputFileInfo, id);
+        if (deletedPerson == null){
+            return null;
+        }
+        else {
+            fileReader.writeToThisFile(outputFileInfo,fileReader.getPathToFile());
+            return deletedPerson;
+        }
     }
 
     public FileReader getFileReader() {

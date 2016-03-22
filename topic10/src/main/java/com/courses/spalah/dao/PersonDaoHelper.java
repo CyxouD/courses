@@ -21,74 +21,77 @@ class PersonDaoHelper {
             return false;
         }
         else {
-            String replacingString = formReplacingStringFromPersonCorrectForDao(p);
+            String replacingString = formStringFromPersonCorrectForDao(p);
             outputFileInfo.replace(sBuilderSegment.getStartPoint(), sBuilderSegment.getEndPoint(), replacingString);
             return true;
         }
     }
 
-    public static boolean insertNewStr(StringBuilder outputFileInfo, Person p){
+    public static boolean insertStr(StringBuilder outputFileInfo, Person p){
         int indexToInsert = findIndexToInsert(outputFileInfo.toString(), p.getId());
         if (indexToInsert == -1){
             return false;
         }
         else {
-            outputFileInfo.insert(indexToInsert, p.getId() + "; " + formReplacingStringFromPersonCorrectForDao(p)+";\n");
+            outputFileInfo.insert(indexToInsert, formStringFromPersonCorrectForDao(p)+"\n");
             return true;
         }
     }
 
-    public static void writeToFile(StringBuilder outputFileInfo, String path){
-        try(FileWriter fileWriter = new FileWriter(new File(path))) {
-            fileWriter.write(outputFileInfo.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static Person deleteStr(StringBuilder outputFileInfo, long id){
+        StringBuilderSegment sBuilderSegment = findStringSegmentInFileCorrespondToId(outputFileInfo.toString(), id);
+        if (!isIdWasFound(sBuilderSegment)){
+            return null;
+        }
+        else {
+            Person p = makePersonObjectUsingString(outputFileInfo, sBuilderSegment);
+            outputFileInfo.delete(sBuilderSegment.getStartPoint(), sBuilderSegment.getEndPoint());
+            outputFileInfo.deleteCharAt(0); // to not leave an empty line
+            return p;
         }
     }
 
-    private static int findIndexToInsert(String outputFileInfo, long id){
-        Scanner scanner = new Scanner(outputFileInfo);
-        scanner.useDelimiter(PersonDaoHelper.patternDelimiter);
 
-        long personId;
-        int indexToInsert;
-        while (scanner.hasNext()){
-            personId = Long.parseLong(scanner.next());
-            if (isIdWasSkipped(id, personId)){
-                scanner.close();
-                indexToInsert = outputFileInfo.indexOf(Long.toString(personId));
-                return indexToInsert;
+    private static int findIndexToInsert(String outputFileInfo, long id){
+        try(Scanner scanner = new Scanner(outputFileInfo);) {
+            scanner.useDelimiter(PersonDaoHelper.patternDelimiter);
+
+            long personId;
+            int indexToInsert;
+            while (scanner.hasNext()) {
+                personId = Long.parseLong(scanner.next());
+                if (isIdWasSkipped(id, personId)) {
+                    indexToInsert = outputFileInfo.indexOf(Long.toString(personId));
+                    return indexToInsert;
+                }
+                if (personId == id) {
+                    return -1;
+                } else {
+                    scanner.nextLine();
+                }
             }
-            if (personId == id){
-                return -1;
-            }
-            else{
-                scanner.nextLine();
-            }
+            return outputFileInfo.length();
         }
-        return outputFileInfo.length();
     }
 
     private static StringBuilderSegment findStringSegmentInFileCorrespondToId(String outputFileInfo, long id){
-        Scanner scanner = new Scanner(outputFileInfo);
-        scanner.useDelimiter(PersonDaoHelper.patternDelimiter);
+        try(Scanner scanner = new Scanner(outputFileInfo)) {
+            scanner.useDelimiter(PersonDaoHelper.patternDelimiter);
 
-        long personId;
-        while (scanner.hasNext()){
-            personId = Long.parseLong(scanner.next());
-            if (isIdWasSkipped(id, personId)){
-                scanner.close();
-                return null;
+            long personId;
+            while (scanner.hasNext()) {
+                personId = Long.parseLong(scanner.next());
+                if (isIdWasSkipped(id, personId)) {
+                    return null;
+                }
+                if (personId == id) {
+                    return createSegmentForString(scanner, outputFileInfo, personId);
+                } else {
+                    scanner.nextLine();
+                }
             }
-            if (personId == id){
-                return createSegmentForString(scanner, outputFileInfo);
-            }
-            else{
-                scanner.nextLine();
-            }
+            return null;
         }
-        scanner.close();
-        return null;
     }
 
     private static boolean isIdWasSkipped(long idToSearch, long curIdInFile){
@@ -99,18 +102,25 @@ class PersonDaoHelper {
         return segment != null;
     }
 
-    private static StringBuilderSegment createSegmentForString(Scanner s, String outputFileInfo){
-        int start = outputFileInfo.indexOf(s.next());
+    private static StringBuilderSegment createSegmentForString(Scanner s, String outputFileInfo, long id){
+        int start = outputFileInfo.indexOf(Long.toString(id));
+        s.next();
         s.next();
         String last = s.next();
-        int end = outputFileInfo.indexOf(last)+last.length();
-        s.close();
+        int end = outputFileInfo.indexOf(last)+last.length()+1; // +1 because of ';' at the end
         return new StringBuilderSegment(start,end);
     }
 
-    private static String formReplacingStringFromPersonCorrectForDao(Person p){
-        return p.getFirstName()+"; "+p.getLastName()+";  "+p.getAddress();
+    private static String formStringFromPersonCorrectForDao(Person p){
+        return p.getId()+"; "+p.getFirstName()+"; "+p.getLastName()+";  "+p.getAddress()+";";
 
+    }
+
+    private static Person makePersonObjectUsingString(StringBuilder sBuilder, StringBuilderSegment segment){
+        try(Scanner s = new Scanner(segment.takeStringCorrespondToSegment(sBuilder))) {
+            s.useDelimiter(patternDelimiter);
+            return new Person(Long.parseLong(s.next()), s.next(), s.next(), s.next());
+        }
     }
 
     private static class StringBuilderSegment{
@@ -120,6 +130,10 @@ class PersonDaoHelper {
         StringBuilderSegment(int startP, int endP){
             startPoint = startP;
             endPoint = endP;
+        }
+
+        public String takeStringCorrespondToSegment(StringBuilder sBuilder){
+            return sBuilder.substring(startPoint, endPoint);
         }
 
         public int getEndPoint() {

@@ -1,9 +1,6 @@
 package com.courses.spalah;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * @author Ievgen Tararaka
@@ -12,7 +9,7 @@ public class FileReader {
     public String pathToFile;
 
     public FileReader(String pathToFile) {
-        this.pathToFile = pathToFile;
+        this.pathToFile = "D:\\На пути к программисту\\courses\\topic10\\target\\test-classes\\"+pathToFile;
     }
 
     /**
@@ -33,8 +30,15 @@ public class FileReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return fileInfo.toString();
+    }
+
+    public static void writeToThisFile(StringBuilder outputFileInfo, String path){
+        try(FileWriter fileWriter = new FileWriter(new File(path))) {
+            fileWriter.write(outputFileInfo.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getPathToFile() {
