@@ -1,12 +1,13 @@
 package com.rxn1d.courses;
 
 public class GameTableRealPlayers extends AbstractGameTable {
+
 	private boolean gameStarted = false;
 	private boolean firstBetRoundFinished;
 	
 	
 	public boolean addNewPlayer(String player){ 
-		if (players.size() >= 5){
+		if (players.size() >= MAX_PLAYER_NUMBER){
 			beginTheSession();
 			return false;
 		}
@@ -19,7 +20,7 @@ public class GameTableRealPlayers extends AbstractGameTable {
 			return false;
 		}
 
-		boolean isAdded = players.add(new RealTablePlayer(playerBalance, playerName));
+		boolean isAdded = players.add(new TablePlayerImpl(playerBalance, playerName));
 		if (isAdded){
 			System.out.println("New user with name = "+playerName+" and balance = "+playerBalance+" is added to table");
 			return true;
@@ -29,9 +30,9 @@ public class GameTableRealPlayers extends AbstractGameTable {
 	}
 
 	
-	public RealTablePlayer findPlayerWithName(String name){
+	public TablePlayerImpl findPlayerWithName(String name){
 		for (AbstractPlayer p : players){
-			if (p.getName().equals(name)) return (RealTablePlayer) p;
+			if (p.getName().equals(name)) return (TablePlayerImpl) p;
 		}
 		System.out.println("BET NOT ACCEPTED");
 		System.out.println("Player with this name "+ name+ " is not registered");
@@ -40,7 +41,7 @@ public class GameTableRealPlayers extends AbstractGameTable {
 	
 	public boolean isAllPlayersMadeBet(){
 		for (AbstractPlayer p : players){
-			RealTablePlayer realPlayer = (RealTablePlayer) p;
+			TablePlayerImpl realPlayer = (TablePlayerImpl) p;
 			if (!realPlayer.isMadeBet() && realPlayer.isInGame()) return false;
 		}
 		if(!firstBetRoundFinished){
@@ -69,7 +70,7 @@ public class GameTableRealPlayers extends AbstractGameTable {
 	
 	private void makeAllBetsNotMade(){
 		for (AbstractPlayer p : players){
-			RealTablePlayer realPlayer = (RealTablePlayer) p;
+			TablePlayerImpl realPlayer = (TablePlayerImpl) p;
 			realPlayer.setMadeBet(false);
 		}
 	}

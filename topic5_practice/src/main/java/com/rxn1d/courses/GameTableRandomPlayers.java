@@ -5,7 +5,6 @@ public class GameTableRandomPlayers extends AbstractGameTable {
 	
 	
     public GameTableRandomPlayers(int nPlayers, double balance, double bet){
-        super();
         this.bet = bet;
         createPlayers(nPlayers,balance);
     }

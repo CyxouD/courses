@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class AbstractGameTable {
+    static final int MAX_PLAYER_NUMBER = 5;
+    static final int MIN_PLAYER_NUMBER = 0;
+
+
     private static EuropeanRoulette europeanRoulette;
 	HashSet<AbstractPlayer> players;
 	

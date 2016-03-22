@@ -1,6 +1,5 @@
 package com.rxn1d.courses;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /**
@@ -26,95 +25,126 @@ public class CommandProcessor {
             case(""):
                 break;
             case("LOAD"):
-                CommandsFromFileLoader.create(command[1]);
-                try {
-                    String[] line = null;
-                    while ((line = CommandsFromFileLoader.getCommand()) != null){
-                        parseCommand(line);
-                    }
-
-                }catch (CommandsFromFileLoader.LoaderNotReadyException e) {
-                    e.printStackTrace();
-                }
+                processLoadCommand(command[1]);
                 break;
             case("NEW_USER"):
-                if(gameTable.isGameStarted()){
-                    System.out.println("SORRY,"+command[1] +", THE GAME HAS ALREADY STARTED.");
-                    break;
-                }
-                boolean isAdded = gameTable.addNewPlayer(command[1]+ " " +command[2]);
-                if (!isAdded){
-                    if(gameTable.isGameStarted()){
-                        System.out.println("The gameTable is full.Let's start!");
-                        break;
-                    }
-                    else{
-                        System.out.println("Current player is already registered");
-                    }
-                    return true;
-                }
+                if (processNewUserCommand(command[1], command[2])) return true;
                 break;
-
             case("BET"):
-                RealTablePlayer player = gameTable.findPlayerWithName(command[1]);
-                if (player != null) {
-                    String bet;
-                    if (command.length == 4)
-                        bet = command[2] + " " + command[3];
-                    else
-                        bet = command[2] + " " + command[3] + " " + command[4];
-                    player.makeBet(bet);
-                    return true;
-                }
+                if (processNewBetCommand(command)) return true;
                 break;
-
             case("PLAY_GAME"):
-                if (gameTable.isAllPlayersMadeBet()){
-                    gameTable.spin();
-                    gameTable.checkPlayers();
-                }
+                processPlayGameCommand();
                 break;
-
             case("EXIT"):
-                System.out.println("OOPS! GameTable was closed");
+                processExitCommand();
                 return false;
-
             case("TEST_START"):
-                int nPlayers;
-                double balancePlayers;
-                double betPlayers;
-                nPlayers = Integer.parseInt(command[1]);
-                if (nPlayers < 0 || nPlayers > 5) {
-                    System.out.println("Number of players must be [0;5]");
-                    break;
-                }
-                balancePlayers = Double.parseDouble(command[2]);
-                if (balancePlayers < 1) {
-                    System.out.println("Balance of players should be at least more than 1 to make one bet");
-                    break;
-                }
-                betPlayers = Double.parseDouble(command[3]);
-                if (betPlayers < 1 || betPlayers > 500) {
-                    System.out.println("Bets must be between [1;500]");
-                    break;
-                }
-                GameTableRandomPlayers gameTable = new GameTableRandomPlayers(nPlayers, balancePlayers, betPlayers);
-                gameTable.startGame();
-                GameTableStats.printStats();
+                processTestCommand(command[1], command[2], command[3]);
                 break;
-
             case("STATS"):
-                GameTableStats.printStats();
+                processStatsCommand();
                 break;
-
             default:
-                System.out.println("THERE IS NO COMMAND: "+command[0]);
+                processIllegalCommand(command[0]);
                 break;
-
             }
         if (!gameTable.isPlayersHaveEnoughBalance()) return false;
         return true;
         }
+
+    private static void processLoadCommand(String path){
+        CommandsFromFileLoader.create(path);
+        try {
+            String[] line = null;
+            while ((line = CommandsFromFileLoader.getCommand()) != null){
+                parseCommand(line);
+            }
+
+        }catch (CommandsFromFileLoader.LoaderNotReadyException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static boolean processNewUserCommand(String playerName, String playerBalance){
+        if(gameTable.isGameStarted()){
+            System.out.println("SORRY,"+playerName +", THE GAME HAS ALREADY STARTED.");
+            return false;
+        }
+        boolean isAdded = gameTable.addNewPlayer(playerName+ " " +playerBalance);
+        if (!isAdded){
+            if(gameTable.isGameStarted()){
+                System.out.println("The gameTable is full.Let's start!");
+                return false;
+            }
+            else{
+                System.out.println("Current player is already registered");
+            }
+        }
+        return true;
+    }
+
+    private static boolean processNewBetCommand(String[] betData){
+        TablePlayerImpl player = gameTable.findPlayerWithName(betData[1]);
+        if (player != null) {
+            String bet;
+            if (betData.length == 4)
+                bet = betData[2] + " " + betData[3];
+            else
+                bet = betData[2] + " " + betData[3] + " " + betData[4];
+            player.makeBet(bet);
+            return true;
+        }
+        return false;
+    }
+
+    private static void processPlayGameCommand(){
+        if (gameTable.isAllPlayersMadeBet()){
+            gameTable.spin();
+            gameTable.checkPlayers();
+        }
+    }
+
+    private static void processExitCommand(){
+        System.out.println("OOPS! GameTable was closed");
+    }
+
+    private static void processTestCommand(String playersNumber, String playersBalance, String playersBet){
+        int nPlayers;
+        double balancePlayers;
+        double betPlayers;
+        nPlayers = Integer.parseInt(playersNumber);
+        balancePlayers = Double.parseDouble(playersBalance);
+        betPlayers = Double.parseDouble(playersBet);
+        if (!processOnTestErrors(nPlayers, balancePlayers, betPlayers)) return; // incorrect info
+        GameTableRandomPlayers gameTable = new GameTableRandomPlayers(nPlayers, balancePlayers, betPlayers);
+        gameTable.startGame();
+        GameTableStats.printStats();
+    }
+
+    private static boolean processOnTestErrors(int playersNumber, double playersBalance, double playersBet){
+        if (playersNumber < AbstractGameTable.MIN_PLAYER_NUMBER || playersNumber > AbstractGameTable.MAX_PLAYER_NUMBER) {
+            System.out.println("Number of players must be [0;5]");
+            return false;
+        }
+        if (playersBalance < AbstractPlayer.MIN_PLAYER_BET) {
+            System.out.println("Balance of players should be at least more than 1 to make one bet");
+            return false;
+        }
+        if (playersBet < AbstractPlayer.MIN_PLAYER_BET || playersBet > AbstractPlayer.MAX_PLAYER_BET) {
+            System.out.println("Bets must be between [1;500]");
+            return false;
+        }
+        return true;
+    }
+
+    private static void processStatsCommand(){
+        GameTableStats.printStats();
+    }
+
+    private static void processIllegalCommand(String command){
+        System.out.println("THERE IS NO COMMAND: "+command);
+    }
 
     public static void main(String[] args){
     }

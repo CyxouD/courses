@@ -1,6 +1,9 @@
 package com.rxn1d.courses;
 public abstract class AbstractPlayer {
-	
+	static final int MIN_PLAYER_BET = 1;
+    static final int MAX_PLAYER_BET = 500;
+
+
 	double balance;
 	String name;
 	BetType betType;

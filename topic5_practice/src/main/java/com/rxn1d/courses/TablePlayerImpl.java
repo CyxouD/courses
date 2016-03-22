@@ -1,10 +1,9 @@
 package com.rxn1d.courses;
-public class RealTablePlayer extends AbstractPlayer{
+public class TablePlayerImpl extends AbstractPlayer{
 	private boolean madeBet;
 	
-	public RealTablePlayer(double balance, String name) {
+	public TablePlayerImpl(double balance, String name) {
 		super(balance, name);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -42,8 +41,8 @@ public class RealTablePlayer extends AbstractPlayer{
     public boolean equals(Object o){
         if (o == null) return false;
 
-        if (!(o instanceof RealTablePlayer)) return false;
-        RealTablePlayer that = (RealTablePlayer) o;
+        if (!(o instanceof TablePlayerImpl)) return false;
+        TablePlayerImpl that = (TablePlayerImpl) o;
 
         if (this.name.equals(that.name)) return true;
         return false;

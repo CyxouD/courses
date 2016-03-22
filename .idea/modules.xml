@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/test/test.iml" filepath="$PROJECT_DIR$/test/test.iml" />
       <module fileurl="file://$PROJECT_DIR$/topic1/topic1.iml" filepath="$PROJECT_DIR$/topic1/topic1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/topic10/topic10.iml" filepath="$PROJECT_DIR$/topic10/topic10.iml" />
+      <module fileurl="file://$PROJECT_DIR$/topic11/topic11.iml" filepath="$PROJECT_DIR$/topic11/topic11.iml" />
       <module fileurl="file://$PROJECT_DIR$/topic2/topic2.iml" filepath="$PROJECT_DIR$/topic2/topic2.iml" />
       <module fileurl="file://$PROJECT_DIR$/topic2_practice/topic2_practice.iml" filepath="$PROJECT_DIR$/topic2_practice/topic2_practice.iml" />
       <module fileurl="file://$PROJECT_DIR$/topic3/topic3.iml" filepath="$PROJECT_DIR$/topic3/topic3.iml" />
@@ -12,6 +14,7 @@
       <module fileurl="file://$PROJECT_DIR$/topic5_practice/topic5_practice.iml" filepath="$PROJECT_DIR$/topic5_practice/topic5_practice.iml" />
       <module fileurl="file://$PROJECT_DIR$/topic6/topic6.iml" filepath="$PROJECT_DIR$/topic6/topic6.iml" />
       <module fileurl="file://$PROJECT_DIR$/topic8/topic8.iml" filepath="$PROJECT_DIR$/topic8/topic8.iml" />
+      <module fileurl="file://$PROJECT_DIR$/topic9/topic9.iml" filepath="$PROJECT_DIR$/topic9/topic9.iml" />
     </modules>
   </component>
 </project>
