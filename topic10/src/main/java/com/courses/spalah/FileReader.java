@@ -1,7 +1,10 @@
 package com.courses.spalah;
 
+<<<<<<< HEAD
 import java.io.*;
 
+=======
+>>>>>>> upstream/master
 /**
  * @author Ievgen Tararaka
  */
@@ -9,7 +12,11 @@ public class FileReader {
     public String pathToFile;
 
     public FileReader(String pathToFile) {
+<<<<<<< HEAD
         this.pathToFile = "D:\\На пути к программисту\\courses\\topic10\\target\\test-classes\\"+pathToFile;
+=======
+        this.pathToFile = pathToFile;
+>>>>>>> upstream/master
     }
 
     /**
@@ -17,6 +24,7 @@ public class FileReader {
      * @return content of file
      */
     public String readFile() {
+<<<<<<< HEAD
         StringBuilder fileInfo = null;
         try(BufferedReader bufReader = new BufferedReader(new java.io.FileReader(new File(pathToFile)))) {
             fileInfo = new StringBuilder();
@@ -39,6 +47,9 @@ public class FileReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+=======
+        return "";
+>>>>>>> upstream/master
     }
 
     public String getPathToFile() {

@@ -1,8 +1,12 @@
 package com.courses.spalah.dao;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+=======
+import java.util.List;
+>>>>>>> upstream/master
 
 import com.courses.spalah.FileReader;
 import com.courses.spalah.domain.Person;
@@ -21,6 +25,7 @@ public class PersonDao implements Dao<Person> {
 
     @Override
     public List<Person> findAll() {
+<<<<<<< HEAD
         List<Person> listPerson = new ArrayList<>();
         try(Scanner scanner = new Scanner(fileReader.readFile())) {
             scanner.useDelimiter(PersonDaoHelper.patternDelimiter);
@@ -39,10 +44,14 @@ public class PersonDao implements Dao<Person> {
 
             return listPerson;
         }
+=======
+        return null;
+>>>>>>> upstream/master
     }
 
     @Override
     public Person findById(Long id) {
+<<<<<<< HEAD
         try(Scanner scanner = new Scanner(fileReader.readFile())) {
             scanner.useDelimiter(PersonDaoHelper.patternDelimiter);
 
@@ -63,10 +72,14 @@ public class PersonDao implements Dao<Person> {
             }
             return null;
         }
+=======
+        return null;
+>>>>>>> upstream/master
     }
 
     @Override
     public boolean update(Person entity) {
+<<<<<<< HEAD
         StringBuilder outputFileInfo = new StringBuilder().append(fileReader.readFile());
 
         boolean isUpdated = PersonDaoHelper.replaceStrCorrespondToIdWithNewData(outputFileInfo, entity);
@@ -77,10 +90,14 @@ public class PersonDao implements Dao<Person> {
             fileReader.writeToThisFile(outputFileInfo,fileReader.getPathToFile());
             return true;
         }
+=======
+        return false;
+>>>>>>> upstream/master
     }
 
     @Override
     public boolean insert(Person entity) {
+<<<<<<< HEAD
         StringBuilder outputFileInfo = new StringBuilder().append(fileReader.readFile());
         boolean isInserted= PersonDaoHelper.insertStr(outputFileInfo, entity);
         if (!isInserted){
@@ -90,10 +107,14 @@ public class PersonDao implements Dao<Person> {
             fileReader.writeToThisFile(outputFileInfo,fileReader.getPathToFile());
             return true;
         }
+=======
+        return false;
+>>>>>>> upstream/master
     }
 
     @Override
     public Person remove(Long id) {
+<<<<<<< HEAD
         StringBuilder outputFileInfo = new StringBuilder().append(fileReader.readFile());
 
         Person deletedPerson = PersonDaoHelper.deleteStr(outputFileInfo, id);
@@ -104,6 +125,9 @@ public class PersonDao implements Dao<Person> {
             fileReader.writeToThisFile(outputFileInfo,fileReader.getPathToFile());
             return deletedPerson;
         }
+=======
+        return null;
+>>>>>>> upstream/master
     }
 
     public FileReader getFileReader() {
