@@ -118,3 +118,24 @@
 [ДЗ #10](https://github.com/rxn1d/courses/blob/master/topic10/topic10_home_work.md)
 * Читаем про базы данных и SQL
 * Делаем имитацию БД
+
+11\. Базы данныз
+* Введение
+* ER-модель
+* Реляционные базы
+* DDL
+* DML
+
+[ДЗ #11](https://github.com/rxn1d/courses/blob/master/topic11/topic11_home_work.md)
+* Читаем про базы данных и SQL
+* Ставим себе MySQL
+* Играем с тестовой базой
+
+12\. Базы данных и JDBC
+* JOINS
+* Транзакционность
+* Хранимые процедуры и функции
+* JDBC
+
+[ДЗ #12](https://github.com/rxn1d/courses/blob/master/topic12/topic12_home_work.md)
+* Делаем приложени, которое работает с БД через JDBC
