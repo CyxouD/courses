@@ -186,7 +186,7 @@ public class UsedCarsTradeClient {
             System.out.println(wasAdded);
             if (wasAdded){
                 DefaultTableModel model = (DefaultTableModel) tableAds.getModel ();
-                model.addRow (new Object[] {vin, modelName, price, phone});
+                model.addRow (new Object[] {vin, price, information, phone});
             }
         }
     }
