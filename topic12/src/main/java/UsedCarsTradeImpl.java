@@ -132,37 +132,6 @@ public class UsedCarsTradeImpl {
         return data;
     }
 
-
-        /*
-        *  JTable in UsedCarsTradeClient used this array to display data
-        */
-
-        private static Object[][] resultSetToArray(ResultSet resultSet, Object[][] data) throws  SQLException{
-            resultSet.last ();
-            int rows = resultSet.getRow ();
-            resultSet.beforeFirst ();
-            data = new Object[rows][7];
-            int nRow = 0;
-            while (resultSet.next()){
-                String car = resultSet.getString("car");
-                data[nRow][0] = car;
-                double price = resultSet.getDouble("price");
-                data[nRow][1] = price;
-                String information = resultSet.getString("information");
-                data[nRow][2] = information;
-                String owner_phone = resultSet.getString("owner_phone");
-                data[nRow][3] = owner_phone;
-                String car_manufacturer = resultSet.getString ("manufacturer");
-                data[nRow][4] = car_manufacturer;
-                String car_model = resultSet.getString ("model_name");
-                data[nRow][5] = car_model;
-                int car_release_year = resultSet.getInt ("release_year");
-                data[nRow][6] = car_release_year;
-                nRow++;
-        }
-            return data;
-    }
-
     public static void preparedStatementUpdate(String car_vin){
         try{
             preparedStatementSaveIdBeforeDelete.setString(1,car_vin);
@@ -217,6 +186,37 @@ public class UsedCarsTradeImpl {
         preparedStatementGetVin.setString (1,vin);
         ResultSet resultSet = preparedStatementGetVin.executeQuery ();
         return !resultSet.next ();
+    }
+
+
+        /*
+        *  JTable in UsedCarsTradeClient used this array to display data
+        */
+
+    private static Object[][] resultSetToArray(ResultSet resultSet, Object[][] data) throws  SQLException{
+        resultSet.last ();
+        int rows = resultSet.getRow ();
+        resultSet.beforeFirst ();
+        data = new Object[rows][UsedCarsTradeClient.numberOfColumns];
+        int nRow = 0;
+        while (resultSet.next()){
+            String car = resultSet.getString("car");
+            data[nRow][0] = car;
+            double price = resultSet.getDouble("price");
+            data[nRow][1] = price;
+            String information = resultSet.getString("information");
+            data[nRow][2] = information;
+            String owner_phone = resultSet.getString("owner_phone");
+            data[nRow][3] = owner_phone;
+            String car_manufacturer = resultSet.getString ("manufacturer");
+            data[nRow][4] = car_manufacturer;
+            String car_model = resultSet.getString ("model_name");
+            data[nRow][5] = car_model;
+            int car_release_year = resultSet.getInt ("release_year");
+            data[nRow][6] = car_release_year;
+            nRow++;
+        }
+        return data;
     }
 
 }

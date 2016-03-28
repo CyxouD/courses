@@ -1,3 +1,5 @@
+import javafx.scene.control.Tab;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.html.ObjectView;
@@ -12,6 +14,8 @@ import java.awt.geom.Arc2D;
  * Created by Dima on 27.03.2016.
  */
 public class UsedCarsTradeClient {
+
+    public static int numberOfColumns;
 
     private JFrame frame;
     private static final Object[] TABLE_COLUMN_NAMES = {"VIN", "Price", "Information", "Owner_contacts", "Manufacturer", "Model", "Release year"};
@@ -53,6 +57,7 @@ public class UsedCarsTradeClient {
         UsedCarsTradeImpl.initPreparedStatements ();
         Object[][] data = UsedCarsTradeImpl.preparedStatementQueryNoParameters ();
         tableAds = new JTable (new DefaultTableModel (data,  TABLE_COLUMN_NAMES));
+        numberOfColumns = TABLE_COLUMN_NAMES.length;
         JScrollPane tableScrollPane = new JScrollPane (tableAds);
         frame.getContentPane ().add (tableScrollPane, BorderLayout.CENTER);
 
@@ -196,7 +201,7 @@ public class UsedCarsTradeClient {
         int[] selectedRows = tableAds.getSelectedRows();
         for (int i = selectedRows.length - 1; i >= 0; i--) {
             System.out.println(model.getValueAt (selectedRows[i],0).toString ());
-            UsedCarsTradeImpl.preparedStatementUpdate (model.getValueAt (selectedRows[i],0).toString ());
+            UsedCarsTradeImpl.preparedStatementUpdate (model.getValueAt (selectedRows[i],0).toString ()); // 0 - column where Vin's stored
             model.removeRow(selectedRows[i]);
         }
     }
