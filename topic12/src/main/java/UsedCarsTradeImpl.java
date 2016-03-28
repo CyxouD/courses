@@ -5,7 +5,7 @@ import java.sql.*;
  */
 public class UsedCarsTradeImpl {
 
-    private static final String QUERY_WITHOUT_PATARAMETERS = "Select car,price,information,owner_phone\n"+
+    private static final String QUERY_WITHOUT_PATARAMETERS = "Select car,price,information,owner_phone,manufacturer,model_name,release_year\n"+
             "From car_ad \n"+
             " INNER JOIN\n"+
             "\tcar\n"+
@@ -14,7 +14,7 @@ public class UsedCarsTradeImpl {
             "\tcar_owner\n"+
             "    On car_owner = owner_id;";
 
-    private static final String QUERY_WITH_PARAMETERS = "Select car,price,information,owner_phone\n" +
+    private static final String QUERY_WITH_PARAMETERS = "Select car,price,information,owner_phone,manufacturer,model_name,release_year\n" +
             "From car_ad \n" +
             " INNER JOIN\n" +
             "\tcar\n" +
@@ -113,54 +113,54 @@ public class UsedCarsTradeImpl {
             preparedStatementQueryWithParameters.setDouble (5, Double.parseDouble (fromPrice));
             preparedStatementQueryWithParameters.setDouble (6, Double.parseDouble (toPrice));
             ResultSet resultSet = preparedStatementQueryWithParameters.executeQuery ();
-            resultSet.last ();
-            int rows = resultSet.getRow ();
-            resultSet.beforeFirst ();
-            data = new Object[rows][4];
-            int i = 0;
-            while (resultSet.next ()) {
-                String car = resultSet.getString ("car");
-                data[i][0] = car;
-                int price = resultSet.getInt ("price");
-                data[i][1] = price;
-                String information = resultSet.getString ("information");
-                data[i][2] = information;
-                String owner_phone = resultSet.getString ("owner_phone");
-                data[i][3] = owner_phone;
-                System.out.println (car + " " + price + " " + information + " " + owner_phone);
-                i++;
-            }
+            data = resultSetToArray (resultSet, data);
         } catch (SQLException e) {
             e.printStackTrace ();
         }
         return data;
     }
 
-    public static Object[][] preparedStatementQueryNoParameters(){
+    public static Object[][] preparedStatementQueryNoParameters() {
         Object[][] data = null;
-        try{
-            ResultSet resultSet = preparedStatementQueryNoParameters.executeQuery();
+        ResultSet resultSet = null;
+        try {
+            resultSet = preparedStatementQueryNoParameters.executeQuery();
+            data = resultSetToArray (resultSet, data);
+        } catch (SQLException e) {
+            e.printStackTrace ();
+        }
+        return data;
+    }
+
+
+        /*
+        *  JTable in UsedCarsTradeClient used this array to display data
+        */
+
+        private static Object[][] resultSetToArray(ResultSet resultSet, Object[][] data) throws  SQLException{
             resultSet.last ();
             int rows = resultSet.getRow ();
             resultSet.beforeFirst ();
-            data = new Object[rows][4];
-            int i = 0;
+            data = new Object[rows][7];
+            int nRow = 0;
             while (resultSet.next()){
                 String car = resultSet.getString("car");
-                data[i][0] = car;
-                int price = resultSet.getInt("price");
-                data[i][1] = price;
+                data[nRow][0] = car;
+                double price = resultSet.getDouble("price");
+                data[nRow][1] = price;
                 String information = resultSet.getString("information");
-                data[i][2] = information;
+                data[nRow][2] = information;
                 String owner_phone = resultSet.getString("owner_phone");
-                data[i][3] = owner_phone;
-                System.out.println(car + " "+ price +" "+ information+" "+owner_phone);
-                i++;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+                data[nRow][3] = owner_phone;
+                String car_manufacturer = resultSet.getString ("manufacturer");
+                data[nRow][4] = car_manufacturer;
+                String car_model = resultSet.getString ("model_name");
+                data[nRow][5] = car_model;
+                int car_release_year = resultSet.getInt ("release_year");
+                data[nRow][6] = car_release_year;
+                nRow++;
         }
-        return data;
+            return data;
     }
 
     public static void preparedStatementUpdate(String car_vin){

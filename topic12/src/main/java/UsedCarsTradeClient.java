@@ -14,7 +14,7 @@ import java.awt.geom.Arc2D;
 public class UsedCarsTradeClient {
 
     private JFrame frame;
-    private static final Object[] TABLE_COLUMN_NAMES = {"VIN", "Price", "Information", "Owner_contacts"};
+    private static final Object[] TABLE_COLUMN_NAMES = {"VIN", "Price", "Information", "Owner_contacts", "Manufacturer", "Model", "Release year"};
     private JTable tableAds = null;
 
     private JTextField manufacturerTextField = null;
@@ -186,7 +186,7 @@ public class UsedCarsTradeClient {
             System.out.println(wasAdded);
             if (wasAdded){
                 DefaultTableModel model = (DefaultTableModel) tableAds.getModel ();
-                model.addRow (new Object[] {vin, price, information, phone});
+                model.addRow (new Object[] {vin, price, information, phone, manufacturer, modelName, releaseYear});
             }
         }
     }
