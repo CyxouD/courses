@@ -57,29 +57,13 @@ public class UsedCarsTradeImpl {
     private static PreparedStatement preparedStatementInsertIntoCarAd;
     private static PreparedStatement preparedStatementGetVin;
 
-    private static UsedCarsTradeDB db = new UsedCarsTradeDB();
-    private static Connection dbConnection = db.getConnection();;
+    private static Connection dbConnection;
 
 
 
-
-    public static void initPreparedStatements(){
-        try {
-            preparedStatementQueryWithParameters = dbConnection.prepareStatement(QUERY_WITH_PARAMETERS);
-            preparedStatementQueryNoParameters = dbConnection.prepareStatement(QUERY_WITHOUT_PATARAMETERS);
-            preparedStatementSaveIdBeforeDelete = dbConnection.prepareStatement(SAVE_ID_BEFORE_DELETE);
-            preparedStatementDeleteFromCar = dbConnection.prepareStatement(DELETE_FROM_CAR);
-            preparedStatementDeleteFromCarOwner = dbConnection.prepareStatement(DELETE_FROM_CAR_OWNER);
-            preparedStatementDeleteFromCarAd = dbConnection.prepareStatement(DELETE_FROM_CAR_AD);
-            preparedStatementInsertIntoCarOwner = dbConnection.prepareStatement(INSERT_INTO_CAR_OWNER);
-            preparedStatementGetLastId = dbConnection.prepareStatement(GET_LAST_ID);
-            preparedStatementInsertIntoCar = dbConnection.prepareStatement(INSERT_INTO_CAR);
-            preparedStatementInsertIntoCarAd = dbConnection.prepareStatement(INSERT_INTO_CAR_AD);
-            preparedStatementGetVin = dbConnection.prepareStatement (SELECT_SPECIFIC_ID);
-
-        } catch (SQLException e) {
-            e.printStackTrace ();
-        }
+    public static void init(){
+        initConnection();
+        initPreparedStatements();
     }
 
     public static void closePreparedStatements(){
@@ -96,8 +80,8 @@ public class UsedCarsTradeImpl {
         }
     }
 
-    public static Object[][] preparedStatementQueryWithParameters(String manufacturer, String modelName, String fromRelease, String toRelease,
-                                                                   String fromPrice, String toPrice) {
+    public static Object[][] preparedStatementQueryWithParameters(String manufacturer, String modelName, String fromRelease,
+                                                                  String toRelease, String fromPrice, String toPrice) {
         Object[][] data = null;
         try {
             if (manufacturer.isEmpty ()) manufacturer = ANY;
@@ -146,7 +130,7 @@ public class UsedCarsTradeImpl {
             preparedStatementDeleteFromCar.executeUpdate();
 
             preparedStatementDeleteFromCarOwner.setInt(1,owner_id);
-            preparedStatementDeleteFromCarOwner.executeUpdate();;
+            preparedStatementDeleteFromCarOwner.executeUpdate();
 
         }
         catch(SQLException e){
@@ -180,6 +164,30 @@ public class UsedCarsTradeImpl {
             e.printStackTrace();
         }
         return true;
+    }
+
+    private static void initConnection(){
+        dbConnection = new UsedCarsTradeDB().getConnection ();
+    }
+
+
+    private static void initPreparedStatements(){
+        try {
+            preparedStatementQueryWithParameters = dbConnection.prepareStatement(QUERY_WITH_PARAMETERS);
+            preparedStatementQueryNoParameters = dbConnection.prepareStatement(QUERY_WITHOUT_PATARAMETERS);
+            preparedStatementSaveIdBeforeDelete = dbConnection.prepareStatement(SAVE_ID_BEFORE_DELETE);
+            preparedStatementDeleteFromCar = dbConnection.prepareStatement(DELETE_FROM_CAR);
+            preparedStatementDeleteFromCarOwner = dbConnection.prepareStatement(DELETE_FROM_CAR_OWNER);
+            preparedStatementDeleteFromCarAd = dbConnection.prepareStatement(DELETE_FROM_CAR_AD);
+            preparedStatementInsertIntoCarOwner = dbConnection.prepareStatement(INSERT_INTO_CAR_OWNER);
+            preparedStatementGetLastId = dbConnection.prepareStatement(GET_LAST_ID);
+            preparedStatementInsertIntoCar = dbConnection.prepareStatement(INSERT_INTO_CAR);
+            preparedStatementInsertIntoCarAd = dbConnection.prepareStatement(INSERT_INTO_CAR_AD);
+            preparedStatementGetVin = dbConnection.prepareStatement (SELECT_SPECIFIC_ID);
+
+        } catch (SQLException e) {
+            e.printStackTrace ();
+        }
     }
 
     private static boolean isVinUnique(String vin) throws  SQLException{

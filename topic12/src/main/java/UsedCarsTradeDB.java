@@ -20,7 +20,7 @@ public class UsedCarsTradeDB {
         }
     }
 
-    public Connection getConnection() {
+    public static Connection getConnection() {
         return connection;
     }
 }

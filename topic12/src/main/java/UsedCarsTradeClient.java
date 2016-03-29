@@ -1,14 +1,13 @@
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Tab;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.html.ObjectView;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.awt.geom.Arc2D;
+import java.sql.SQLException;
 
 /**
  * Created by Dima on 27.03.2016.
@@ -17,9 +16,17 @@ public class UsedCarsTradeClient {
 
     public static int numberOfColumns;
 
+    private JFrame enterFrame;
+
     private JFrame frame;
     private static final Object[] TABLE_COLUMN_NAMES = {"VIN", "Price", "Information", "Owner_contacts", "Manufacturer", "Model", "Release year"};
+    private static final int NUMBER_OF_SEARCH_CRITERIA = 6;
+    private static int PLACE_OF_VIN_IN_TABLE = 0;
     private JTable tableAds = null;
+
+    private JFrame dialogFrame = null;
+
+    private User user;
 
     private JTextField manufacturerTextField = null;
     private JTextField modelNameTextField = null;
@@ -31,6 +38,7 @@ public class UsedCarsTradeClient {
     private JTextField nameTF = null;
     private JTextField surnameTF = null;
     private JTextField phoneTF = null;
+
     private JTextField vinCodeTF = null;
     private JTextField manufacturerTF = null;
     private JTextField modelTF = null;
@@ -40,6 +48,45 @@ public class UsedCarsTradeClient {
 
 
     public UsedCarsTradeClient() {
+        UsedCarsTradeDB usedCarsTradeDB = new UsedCarsTradeDB ();
+
+        enterFrame = new JFrame ();
+
+        JPanel enterPanel = new JPanel ();
+        enterPanel.setLayout (new BoxLayout (enterPanel, BoxLayout.Y_AXIS));
+
+        JPanel namePanel = new JPanel ();
+        JLabel nameLabel = new JLabel ("Enter your name");
+        nameTF = new JTextField (20);
+        namePanel.add (nameLabel);
+        namePanel.add (nameTF);
+
+        JPanel surnamePanel = new JPanel ();
+        JLabel surnameLabel = new JLabel ("Enter your surname");
+        surnameTF = new JTextField (20);
+        surnamePanel.add (surnameLabel);
+        surnamePanel.add (surnameTF);
+
+        JPanel phonePanel = new JPanel ();
+        JLabel phoneLabel = new JLabel ("Enter your phone");
+        phoneTF = new JTextField (20);
+        phonePanel.add (phoneLabel);
+        phonePanel.add (phoneTF);
+
+        JButton enterButton = new JButton("Enter service");
+        enterButton.addActionListener (new EnterButtonActionListener());
+
+        enterPanel.add(namePanel);
+        enterPanel.add (surnamePanel);
+        enterPanel.add (phonePanel);
+        enterPanel.add (enterButton);
+
+        enterFrame.getContentPane ().add (enterPanel);
+        enterFrame.setSize (600,600);
+        enterFrame.setVisible (true);
+    }
+
+    private void start(){
         frame = new JFrame ();
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -54,10 +101,9 @@ public class UsedCarsTradeClient {
         });
         frame.setDefaultCloseOperation (WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        UsedCarsTradeImpl.initPreparedStatements ();
-        Object[][] data = UsedCarsTradeImpl.preparedStatementQueryNoParameters ();
-        tableAds = new JTable (new DefaultTableModel (data,  TABLE_COLUMN_NAMES));
         numberOfColumns = TABLE_COLUMN_NAMES.length;
+        Object[][] data = DatabaseOperations.getCarAds ();
+        tableAds = new JTable (new DefaultTableModel (data,  TABLE_COLUMN_NAMES));
         JScrollPane tableScrollPane = new JScrollPane (tableAds);
         frame.getContentPane ().add (tableScrollPane, BorderLayout.CENTER);
 
@@ -93,28 +139,10 @@ public class UsedCarsTradeClient {
 
 
     private void showAddAdDialog(){
-        JFrame dialogFrame = new JFrame ();
+        dialogFrame = new JFrame ();
 
         JPanel dialogPanel = new JPanel ();
         dialogPanel.setLayout (new BoxLayout (dialogPanel, BoxLayout.Y_AXIS));
-
-        JPanel namePanel = new JPanel ();
-        JLabel nameLabel = new JLabel ("Enter your name");
-        nameTF = new JTextField (20);
-        namePanel.add (nameLabel);
-        namePanel.add (nameTF);
-
-        JPanel surnamePanel = new JPanel ();
-        JLabel surnameLabel = new JLabel ("Enter your surname");
-        surnameTF = new JTextField (20);
-        surnamePanel.add (surnameLabel);
-        surnamePanel.add (surnameTF);
-
-        JPanel phonePanel = new JPanel ();
-        JLabel phoneLabel = new JLabel ("Enter your phone");
-        phoneTF = new JTextField (20);
-        phonePanel.add (phoneLabel);
-        phonePanel.add (phoneTF);
 
         JPanel vinCodePanel = new JPanel ();
         JLabel vinCodeLabel = new JLabel ("Enter car's VIN Code");
@@ -155,9 +183,6 @@ public class UsedCarsTradeClient {
         JButton createNewAdButton = new JButton ("Create Ad");
         createNewAdButton.addActionListener (new CreateNewAdActionListener ());
 
-        dialogPanel.add (namePanel);
-        dialogPanel.add (surnamePanel);
-        dialogPanel.add (phonePanel);
         dialogPanel.add (vinCodePanel);
         dialogPanel.add (manufacturerPanel);
         dialogPanel.add (modelPanel);
@@ -172,63 +197,85 @@ public class UsedCarsTradeClient {
     }
 
     private void gatherFieldsText(){
-        String name = nameTF.getText ();
-        String surname = surnameTF.getText ();
-        String phone = phoneTF.getText ();
         String vin = vinCodeTF.getText ();
         String manufacturer = manufacturerTF.getText ();
         String modelName = modelTF.getText ();
         String releaseYear = releaseYearTF.getText ();
         String information = informationTF.getText ();
         String price = priceTF.getText ();
-        if (name.isEmpty () || surname.isEmpty () || phone.isEmpty () || vin.isEmpty () || manufacturer.isEmpty () || modelName.isEmpty ()
+        if (vin.isEmpty () || manufacturer.isEmpty () || modelName.isEmpty ()
                 || releaseYear.isEmpty () || information.isEmpty () || price.isEmpty ()){
-            return;
+            JOptionPane.showMessageDialog (dialogFrame, "Write down all the fields");
         }
         else{
-            boolean wasAdded = UsedCarsTradeImpl.preparedStatementAdd (name,surname,Integer.parseInt (phone),vin,manufacturer,modelName,Integer.parseInt (releaseYear),
-                    information, Double.parseDouble (price));
-            System.out.println(wasAdded);
-            if (wasAdded){
+            String phone = Integer.toString (user.getPhone ());
+            Car car = new Car(vin,manufacturer,modelName, Integer.parseInt (releaseYear), information, Double.parseDouble (price));
+            try {
+                DatabaseOperations.addCarAd (car, user.getIdInDB ());
                 DefaultTableModel model = (DefaultTableModel) tableAds.getModel ();
                 model.addRow (new Object[] {vin, price, information, phone, manufacturer, modelName, releaseYear});
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog (dialogFrame, "This VIN is already registered");
             }
+
         }
     }
 
     private void removeSelectedAds(){
         DefaultTableModel model = (DefaultTableModel) tableAds.getModel();
         int[] selectedRows = tableAds.getSelectedRows();
+        if (selectedRows.length == 0) JOptionPane.showMessageDialog (frame, "None of ads selected");
+
         for (int i = selectedRows.length - 1; i >= 0; i--) {
             System.out.println(model.getValueAt (selectedRows[i],0).toString ());
-            UsedCarsTradeImpl.preparedStatementUpdate (model.getValueAt (selectedRows[i],0).toString ()); // 0 - column where Vin's stored
+            DatabaseOperations.deleteCarAd (model.getValueAt (selectedRows[i],PLACE_OF_VIN_IN_TABLE).toString ());
+            //UsedCarsTradeImpl.preparedStatementUpdate (model.getValueAt (selectedRows[i],PLACE_OF_VIN_IN_TABLE).toString ()); // 0 - column where Vin's stored
             model.removeRow(selectedRows[i]);
         }
     }
 
     private void searchWithParameters(){
-        String manufacturer = manufacturerTextField.getText ();
-        String modelName = modelNameTextField.getText ();
-        String fromYear = loReleaseYearTextField.getText ();
-        String toYear = hiReleaseYearTextField.getText ();
-        String fromPrice = loPriceTextField.getText ();
-        String toPrice = hiPriceTextField.getText ();
+        CarSearchParameter[] carSearchParameters = new CarSearchParameter[NUMBER_OF_SEARCH_CRITERIA];
+        carSearchParameters[0] = new CarSearchParameter (manufacturerTextField.getText ());
+        carSearchParameters[1] = new CarSearchParameter (modelNameTextField.getText ());
+        carSearchParameters[2] = new CarSearchParameter (loReleaseYearTextField.getText ());
+        carSearchParameters[3] = new CarSearchParameter (hiReleaseYearTextField.getText ());
+        carSearchParameters[4] = new CarSearchParameter (loPriceTextField.getText ());
+        carSearchParameters[5] = new CarSearchParameter (hiPriceTextField.getText ());
 
-        Object[][] data = UsedCarsTradeImpl.preparedStatementQueryWithParameters (manufacturer, modelName, fromYear, toYear, fromPrice, toPrice);
-        DefaultTableModel model = (DefaultTableModel) tableAds.getModel();
-        int rowCount = model.getRowCount ();
-        for (int i = rowCount - 1; i >= 0; i--){
-            model.removeRow (i);
+        Object[][] data = DatabaseOperations.getSearchedCarAds (carSearchParameters);
+        if (data.length == 0){
+            JOptionPane.showMessageDialog (frame, "No ads for this request");
+
         }
-        for (int i = 0; i < data.length; i++){
-            model.insertRow (i, data[i]);
+        else {
+            DefaultTableModel model = (DefaultTableModel) tableAds.getModel ();
+            int rowCount = model.getRowCount ();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                model.removeRow (i);
+            }
+            for (int i = 0; i < data.length; i++) {
+                model.insertRow (i, data[i]);
+            }
         }
     }
 
-    public static void main(String[] args) {
-        new UsedCarsTradeClient ();
+    class EnterButtonActionListener implements  ActionListener{
+        public void actionPerformed(ActionEvent e) {
+            String name = nameTF.getText ();
+            String surname = surnameTF.getText ();
+            String phone = phoneTF.getText ();
+            if (name.isEmpty () || surname.isEmpty () || phone.isEmpty ()){
+                JOptionPane.showMessageDialog (enterFrame, "Not all fields are wrote down");
+            }
+            else {
+                user = new User(name,surname,Integer.parseInt (phone),1111);
+                DatabaseOperations.signUpUser (user);
+                enterFrame.dispatchEvent(new WindowEvent (enterFrame, WindowEvent.WINDOW_CLOSING));
+                start ();
+            }
+        }
     }
-
 
     class CreateNewAdActionListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
@@ -286,5 +333,10 @@ public class UsedCarsTradeClient {
         public String getText() {
             return showingHint ? "" : super.getText ();
         }
+    }
+
+
+    public static void main(String[] args) {
+        new UsedCarsTradeClient ();
     }
 }
