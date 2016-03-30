@@ -3,7 +3,7 @@
  */
 public class CarAdQueries {
 
-    public static final String QUERY_WITHOUT_PATARAMETERS = "Select car,price,information,owner_phone,manufacturer,model_name,release_year\n"+
+    public static final String QUERY_WITHOUT_PARAMETERS = "Select car,price,information,owner_phone,manufacturer,model_name,release_year\n"+
             "From car_ad \n"+
             " INNER JOIN\n"+
             "\tcar\n"+
@@ -21,6 +21,16 @@ public class CarAdQueries {
             "\tcar_owner\n" +
             "    On car_owner = owner_id\n" +
             "    where manufacturer Like ? AND model_name Like ? AND release_year BETWEEN ? AND ? AND PRICE BETWEEN ? AND ?;";
+
+    public static final String QUERY_WITHOUT_PARAMETERS_USER_ADS = "Select car,price,information,owner_phone,manufacturer,model_name,release_year\n"+
+            "From car_ad \n"+
+            " INNER JOIN\n"+
+            "\tcar\n"+
+            "On car.vin = car_ad.car\n"+
+            " INNER JOIN\n"+
+            "\tcar_owner\n"+
+            "    On car_owner = owner_id\n" +
+            "    where owner_id = ?";
 
     public static final String INSERT_INTO_CAR_AD = "Insert into car_ad values (?, ?);";
 

@@ -21,7 +21,7 @@ public class DatabaseOperations {
         }
     }
 
-    public static Object[][] getCarAds(){
+    public static Object[][] getAllCarAds(){
         Object[][] data = null;
         try {
             data = listToObjectArray (CarAdDao.getAllAds ());
@@ -29,6 +29,17 @@ public class DatabaseOperations {
             e.printStackTrace ();
         }
         return data;
+    }
+    
+    public static Object[][] getUserCarAds(int owner_id){
+        Object[][] data = null;
+        try {
+            data = listToObjectArray (CarAdDao.getAllAdsOfSpecificUser (owner_id));
+        } catch (SQLException e) {
+            e.printStackTrace ();
+        }
+        return data;
+        
     }
 
     public static Object[][] getSearchedCarAds(CarSearchParameter[] carSearchParameters){

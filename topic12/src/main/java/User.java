@@ -5,7 +5,7 @@ public class User {
     private String userName;
     private String userSurname;
     private int phone;
-    private int password;
+    private char[] password;
     private int idInDB;
 
     public void setIdInDB(int idInDB) {
@@ -16,7 +16,7 @@ public class User {
         return idInDB;
     }
 
-    public User(String userName, String userSurname, int phone, int password) {
+    public User(String userName, String userSurname, int phone, char[] password) {
         this.userName = userName;
         this.userSurname = userSurname;
         this.phone = phone;
@@ -40,7 +40,7 @@ public class User {
         return phone;
     }
 
-    public int getPassword() {
+    public char[] getPassword() {
         return password;
     }
 }

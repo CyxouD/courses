@@ -1,12 +1,7 @@
-import javafx.scene.chart.PieChart;
-import javafx.scene.control.Tab;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.html.ObjectView;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Arc2D;
 import java.sql.SQLException;
 
 /**
@@ -19,14 +14,19 @@ public class UsedCarsTradeClient {
     private JFrame enterFrame;
 
     private JFrame frame;
+    private static Object[] ADS_TYPE = {"ALL_ADS","MY_ADS"};
+    private static JScrollPane tableScrollPane;
     private static final Object[] TABLE_COLUMN_NAMES = {"VIN", "Price", "Information", "Owner_contacts", "Manufacturer", "Model", "Release year"};
     private static final int NUMBER_OF_SEARCH_CRITERIA = 6;
     private static int PLACE_OF_VIN_IN_TABLE = 0;
-    private JTable tableAds = null;
+    private static JTable tableAds = null;
 
     private JFrame dialogFrame = null;
 
-    private User user;
+    private static User user;
+    private JComboBox adsList;
+    private static JButton deleteButton;
+
 
     private JTextField manufacturerTextField = null;
     private JTextField modelNameTextField = null;
@@ -38,6 +38,7 @@ public class UsedCarsTradeClient {
     private JTextField nameTF = null;
     private JTextField surnameTF = null;
     private JTextField phoneTF = null;
+    private JPasswordField passwordField = null;
 
     private JTextField vinCodeTF = null;
     private JTextField manufacturerTF = null;
@@ -52,8 +53,9 @@ public class UsedCarsTradeClient {
 
         enterFrame = new JFrame ();
 
-        JPanel enterPanel = new JPanel ();
-        enterPanel.setLayout (new BoxLayout (enterPanel, BoxLayout.Y_AXIS));
+        JTabbedPane jTabbedPane = new JTabbedPane ();
+        JPanel signUpPanel = new JPanel ();
+        signUpPanel.setLayout (new BoxLayout (signUpPanel, BoxLayout.Y_AXIS));
 
         JPanel namePanel = new JPanel ();
         JLabel nameLabel = new JLabel ("Enter your name");
@@ -73,15 +75,31 @@ public class UsedCarsTradeClient {
         phonePanel.add (phoneLabel);
         phonePanel.add (phoneTF);
 
-        JButton enterButton = new JButton("Enter service");
-        enterButton.addActionListener (new EnterButtonActionListener());
+        JPanel passwordPanel = new JPanel ();
+        JLabel passwordLabel = new JLabel ("Enter your password");
+        passwordField = new JPasswordField (20);
+        passwordPanel.add (passwordLabel);
+        passwordPanel.add (passwordField);
 
-        enterPanel.add(namePanel);
-        enterPanel.add (surnamePanel);
-        enterPanel.add (phonePanel);
-        enterPanel.add (enterButton);
+        JPanel passwordRepeatPanel = new JPanel ();
+        JLabel passwordRepeatLabel = new JLabel ("Repeat your password");
+        JPasswordField passwordRepeatField = new JPasswordField (20);
+        passwordRepeatPanel.add (passwordRepeatLabel);
+        passwordRepeatPanel.add (passwordRepeatField);
 
-        enterFrame.getContentPane ().add (enterPanel);
+        JButton signUpButton = new JButton("Sign up in service");
+        signUpButton.addActionListener (new SignUpButtonActionListener ());
+
+        signUpPanel.add(namePanel);
+        signUpPanel.add (surnamePanel);
+        signUpPanel.add (phonePanel);
+        signUpPanel.add (passwordPanel);
+        signUpPanel.add(passwordRepeatPanel);
+        signUpPanel.add (signUpButton);
+
+        jTabbedPane.add ("Sign up", signUpPanel);
+
+        enterFrame.getContentPane ().add (jTabbedPane);
         enterFrame.setSize (600,600);
         enterFrame.setVisible (true);
     }
@@ -96,15 +114,17 @@ public class UsedCarsTradeClient {
                         JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
                     System.exit(0);
                     UsedCarsTradeImpl.closePreparedStatements();
+                    UsedCarsTradeDB.closeConnection ();
                 }
             }
         });
         frame.setDefaultCloseOperation (WindowConstants.DO_NOTHING_ON_CLOSE);
 
         numberOfColumns = TABLE_COLUMN_NAMES.length;
-        Object[][] data = DatabaseOperations.getCarAds ();
+        Object[][] data = DatabaseOperations.getAllCarAds ();
         tableAds = new JTable (new DefaultTableModel (data,  TABLE_COLUMN_NAMES));
-        JScrollPane tableScrollPane = new JScrollPane (tableAds);
+        tableScrollPane = new JScrollPane ();
+        tableScrollPane.setViewportView (tableAds);
         frame.getContentPane ().add (tableScrollPane, BorderLayout.CENTER);
 
 
@@ -118,9 +138,13 @@ public class UsedCarsTradeClient {
         loPriceTextField = new HintTextField ("lower price");
         hiPriceTextField = new HintTextField ("high price");
         JButton addButton = new JButton ("Add new ad");
-        JButton deleteButton = new JButton ("Delete selected ads");
+        deleteButton = new JButton ("Delete selected ads");
         addButton.addActionListener (new AddButtonActionListener ());
         deleteButton.addActionListener (new DeleteButtonActionListener());
+        deleteButton.setEnabled (false);
+        adsList = new JComboBox(ADS_TYPE);
+        adsList.addActionListener (new ListAdsListener ());
+
         panel.add (searchButton);
         panel.add (manufacturerTextField);
         panel.add (modelNameTextField);
@@ -130,11 +154,28 @@ public class UsedCarsTradeClient {
         panel.add (hiPriceTextField);
         panel.add (addButton);
         panel.add (deleteButton);
+        panel.add (adsList);
 
         frame.getContentPane ().add (panel, BorderLayout.NORTH);
 
         frame.setSize (1280, 720);
         frame.setVisible (true);
+    }
+
+    //Loads user ads or all ads
+    private static void loadAdsChoice(Object adsTypeSelection){
+        Object[][] data = null;
+        DefaultTableModel model = (DefaultTableModel) tableAds.getModel ();
+        if (adsTypeSelection.equals ("ALL_ADS")){
+            data = DatabaseOperations.getAllCarAds ();
+            deleteButton.setEnabled (false);
+        }
+        else {
+            data = DatabaseOperations.getUserCarAds (user.getIdInDB ());
+            deleteButton.setEnabled (true);
+        }
+
+        insertDataInTableModel(model,data);
     }
 
 
@@ -229,7 +270,6 @@ public class UsedCarsTradeClient {
         for (int i = selectedRows.length - 1; i >= 0; i--) {
             System.out.println(model.getValueAt (selectedRows[i],0).toString ());
             DatabaseOperations.deleteCarAd (model.getValueAt (selectedRows[i],PLACE_OF_VIN_IN_TABLE).toString ());
-            //UsedCarsTradeImpl.preparedStatementUpdate (model.getValueAt (selectedRows[i],PLACE_OF_VIN_IN_TABLE).toString ()); // 0 - column where Vin's stored
             model.removeRow(selectedRows[i]);
         }
     }
@@ -242,38 +282,49 @@ public class UsedCarsTradeClient {
         carSearchParameters[3] = new CarSearchParameter (hiReleaseYearTextField.getText ());
         carSearchParameters[4] = new CarSearchParameter (loPriceTextField.getText ());
         carSearchParameters[5] = new CarSearchParameter (hiPriceTextField.getText ());
+        adsList.setSelectedItem ("ALL_ADS");
 
         Object[][] data = DatabaseOperations.getSearchedCarAds (carSearchParameters);
         if (data.length == 0){
             JOptionPane.showMessageDialog (frame, "No ads for this request");
-
         }
         else {
             DefaultTableModel model = (DefaultTableModel) tableAds.getModel ();
-            int rowCount = model.getRowCount ();
-            for (int i = rowCount - 1; i >= 0; i--) {
-                model.removeRow (i);
-            }
-            for (int i = 0; i < data.length; i++) {
-                model.insertRow (i, data[i]);
-            }
+            insertDataInTableModel (model, data);
         }
     }
 
-    class EnterButtonActionListener implements  ActionListener{
+    private static void insertDataInTableModel(DefaultTableModel model, Object[][] data){
+        int rowCount = model.getRowCount ();
+        for (int i = rowCount - 1; i >= 0; i--) {
+            model.removeRow (i);
+        }
+        for (int i = 0; i < data.length; i++) {
+            model.insertRow (i, data[i]);
+        }
+    }
+
+    class SignUpButtonActionListener implements  ActionListener{
         public void actionPerformed(ActionEvent e) {
             String name = nameTF.getText ();
             String surname = surnameTF.getText ();
             String phone = phoneTF.getText ();
-            if (name.isEmpty () || surname.isEmpty () || phone.isEmpty ()){
+            if (name.isEmpty () || surname.isEmpty () || phone.isEmpty () ){
                 JOptionPane.showMessageDialog (enterFrame, "Not all fields are wrote down");
             }
             else {
-                user = new User(name,surname,Integer.parseInt (phone),1111);
+                user = new User(name,surname,Integer.parseInt (phone),passwordField.getPassword ());
                 DatabaseOperations.signUpUser (user);
                 enterFrame.dispatchEvent(new WindowEvent (enterFrame, WindowEvent.WINDOW_CLOSING));
                 start ();
             }
+        }
+    }
+
+    class ListAdsListener implements ActionListener{
+        public void actionPerformed(ActionEvent e) {
+            Object selection = adsList.getSelectedItem ();
+            loadAdsChoice(selection);
         }
     }
 
