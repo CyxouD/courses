@@ -113,7 +113,6 @@ public class UsedCarsTradeClient {
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
                     System.exit(0);
-                    UsedCarsTradeImpl.closePreparedStatements();
                     UsedCarsTradeDB.closeConnection ();
                 }
             }
