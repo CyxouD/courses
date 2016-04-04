@@ -7,14 +7,6 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/topic2/pom.xml" />
-        <option value="$PROJECT_DIR$/topic4/pom.xml" />
-        <option value="$PROJECT_DIR$/topic7/pom.xml" />
-        <option value="$PROJECT_DIR$/topic8/pom.xml" />
-        <option value="$PROJECT_DIR$/topic9/pom.xml" />
-        <option value="$PROJECT_DIR$/topic10/pom.xml" />
-        <option value="$PROJECT_DIR$/topic12/pom.xml" />
-        <option value="$PROJECT_DIR$/topic14/pom.xml" />
       </list>
     </option>
   </component>
@@ -28,7 +20,10 @@
     <ConfirmationsSetting value="0" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/out" />
+  <component name="ProjectResources">
+    <resource url="http://maven.apache.org/POM/4.0.0" location="$PROJECT_DIR$/../../../IntelliJ IDEA Community Edition 15.0.3/apache-maven-3.3.9" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/classes" />
   </component>
 </project>

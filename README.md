@@ -139,3 +139,27 @@
 
 [ДЗ #12](https://github.com/rxn1d/courses/blob/master/topic12/topic12_home_work.md)
 * Делаем приложени, которое работает с БД через JDBC
+
+13\. Практика
+* Обсуждаем предыдущее ДЗ
+* [Замечания](https://github.com/rxn1d/courses/blob/master/topic12/topic12_home_work_issues.md)
+* Доделываем [ДЗ #12](https://github.com/rxn1d/courses/blob/master/topic12/topic12_home_work.md) с учетом замечаний
+
+14\. Сервлеты
+* Java Servlets
+* Servlet Overview
+* Servlet Life Cycle
+* Java Servlet Example
+* HttpServlet
+* HttpRequest
+* HttpResponse
+* HttpSession
+* RequestDispatcher
+* ServletContext
+* web.xml Servlet Configuration
+* Cookies and Servlets
+* Servlet Filters
+
+[ДЗ #14](https://github.com/rxn1d/courses/blob/master/topic14/topic14_home_work.md)
+* Делаем web-приложение
+
