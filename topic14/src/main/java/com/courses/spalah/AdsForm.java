@@ -86,17 +86,19 @@ public class AdsForm extends HttpServlet {
         Long price = (long) jsonObj.get("price");
         Car car = new Car(vin,manufacturer,model,releaseYear.intValue(),information,price.doubleValue());
 
+        boolean everythingWasOk = false;
         try {
             UserDao.add(user);
             CarDao.add(car,user.getIdInDB());
             CarAdDao.add(car);
-            System.out.println("here");
+            everythingWasOk = true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        PrintWriter out = resp.getWriter();
-        out.println("ok");
+        PrintWriter writer = resp.getWriter();
+        if (everythingWasOk) writer.println("ok");
+        else writer.println("not ok");
 
     }
 
