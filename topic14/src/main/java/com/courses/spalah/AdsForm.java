@@ -31,14 +31,7 @@ public class AdsForm extends HttpServlet {
         try {
             List<String> carAds;
             if (req.getParameterNames().hasMoreElements()){  // check if has any parameter
-                CarSearchParameter[] carSearchParameters = new CarSearchParameter[ServletConstants.NUMBER_OF_SEARCH_CRITERIA];
-                carSearchParameters[0] = new CarSearchParameter(req.getParameter("manufacturer"));
-                carSearchParameters[1] = new CarSearchParameter(req.getParameter("modelName"));
-                carSearchParameters[2] = new CarSearchParameter(req.getParameter("yearFrom"));
-                carSearchParameters[3] = new CarSearchParameter(req.getParameter("yearTo"));
-                carSearchParameters[4] = new CarSearchParameter(req.getParameter("priceFrom"));
-                carSearchParameters[5] = new CarSearchParameter(req.getParameter("priceTo"));
-                carAds = CarAdDao.getSpecificAds(carSearchParameters);
+                carAds = CarAdDao.getSpecificAds(formCarParameters(req));
             }
             else {
                 carAds = CarAdDao.getAllAds();
@@ -100,6 +93,17 @@ public class AdsForm extends HttpServlet {
         if (everythingWasOk) writer.println("ok");
         else writer.println("not ok");
 
+    }
+
+    private static CarSearchParameter[] formCarParameters(HttpServletRequest req){
+        CarSearchParameter[] carSearchParameters = new CarSearchParameter[ServletConstants.NUMBER_OF_SEARCH_CRITERIA];
+        carSearchParameters[0] = new CarSearchParameter(req.getParameter("manufacturer"));
+        carSearchParameters[1] = new CarSearchParameter(req.getParameter("modelName"));
+        carSearchParameters[2] = new CarSearchParameter(req.getParameter("yearFrom"));
+        carSearchParameters[3] = new CarSearchParameter(req.getParameter("yearTo"));
+        carSearchParameters[4] = new CarSearchParameter(req.getParameter("priceFrom"));
+        carSearchParameters[5] = new CarSearchParameter(req.getParameter("priceTo"));
+        return carSearchParameters;
     }
 
     @Override
