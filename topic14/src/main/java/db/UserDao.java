@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 
 /**
  * Created by Dima on 29.03.2016.
@@ -16,6 +17,12 @@ public class UserDao {
 
     public void signInUser(User user) {
 
+    }
+
+    public static User createRandomUser(){
+        int phone = - new Random().nextInt()*10000;
+        User user = new User("lol", "vasya", phone, new char[] {113});
+        return user;
     }
 
     public static void add(User user) throws SQLException {

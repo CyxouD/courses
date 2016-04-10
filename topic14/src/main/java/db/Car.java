@@ -43,4 +43,22 @@ public class Car {
     public double getPrice() {
         return price;
     }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "vin='" + vin + '\'' +
+                ", manufacturer='" + manufacturer + '\'' +
+                ", model='" + model + '\'' +
+                ", releaseYear=" + releaseYear +
+                ", information='" + information + '\'' +
+                ", price=" + price +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Car thatCar = (Car) obj;
+        return this.getVin().equals(thatCar.getVin());
+    }
 }

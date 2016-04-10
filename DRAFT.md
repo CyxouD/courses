@@ -131,23 +131,39 @@
 * Ставим себе MySQL
 * Играем с тестовой базой
 
-12\. Практический блок
+12\. Базы данных и JDBC
+* JOINS
+* Транзакционность
+* Хранимые процедуры и функции
+* JDBC
 
-13\. Особенности JAVA 8
-* Lambda-выражения
-* Stream API
-* Collectors
-* Optional
+[ДЗ #12](https://github.com/rxn1d/courses/blob/master/topic12/topic12_home_work.md)
+* Делаем приложени, которое работает с БД через JDBC
 
-14\. Параллелизм и многопоточность
-* Процессы, потоки
-* Состояния потока
-* Thread и Runnable
-* Синхронизация
+13\. Практика
+* Обсуждаем предыдущее ДЗ
+* [Замечания](https://github.com/rxn1d/courses/blob/master/topic12/topic12_home_work_issues.md)
+* Доделываем [ДЗ #12](https://github.com/rxn1d/courses/blob/master/topic12/topic12_home_work.md) с учетом замечаний
 
-15\. Практический блок
+14\. Сервлеты
+* Java Servlets
+* Servlet Overview
+* Servlet Life Cycle
+* Java Servlet Example
+* HttpServlet
+* HttpRequest
+* HttpResponse
+* HttpSession
+* RequestDispatcher
+* ServletContext
+* web.xml Servlet Configuration
+* Cookies and Servlets
+* Servlet Filters
 
-16\. Аннотации, рефлексия
+[ДЗ #14](https://github.com/rxn1d/courses/blob/master/topic14/topic14_home_work.md)
+* Делаем web-приложение
+
+15\. Рефлексия, аннотации
 
 17\. Юнит тестирование
 * TDD

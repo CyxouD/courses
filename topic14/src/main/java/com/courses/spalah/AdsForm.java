@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Dima on 04.04.2016.
@@ -37,21 +36,8 @@ public class AdsForm extends HttpServlet {
                 carAds = CarAdDao.getAllAds();
             }
 
-            int count = 0;
-            JSONObject resultJson = new JSONObject();
-            PrintWriter out = resp.getWriter();
-            boolean noResult = true;
-            for (Object s : carAds){
-                resultJson.put(ServletConstants.TABLE_COLUMN_NAMES[count], s);
-                count++;
-                if (count == ServletConstants.NUMBER_OF_COLUMNS){
-                    out.println("<h1>" + resultJson.toJSONString() + "</h1>");
-                    System.out.println(resultJson.toJSONString());
-                    noResult = false;
-                    count = 0;
-                }
-            }
-            if (noResult) out.print("<h1>" + "No results" + "</h1>");
+            String outputString = formJsonStringToPrint(carAds);
+            resp.getWriter().println(outputString);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -67,17 +53,9 @@ public class AdsForm extends HttpServlet {
             e.printStackTrace();
         }
 
-        int phone = - new Random().nextInt()*10000;
-        User user = new User("lol", "vasya", phone, new char[] {113});
+        User user = UserDao.createRandomUser();
 
-        JSONObject jsonObj = (JSONObject) obj;
-        String vin = (String) jsonObj.get("vin");
-        String manufacturer = (String) jsonObj.get("manufacturer");
-        String model = (String) jsonObj.get("modelName");
-        Long releaseYear = (long) jsonObj.get("releaseYear");
-        String information = (String) jsonObj.get("information");
-        Long price = (long) jsonObj.get("price");
-        Car car = new Car(vin,manufacturer,model,releaseYear.intValue(),information,price.doubleValue());
+        Car car = produceCarObjectFromParameters(obj);
 
         boolean everythingWasOk = false;
         try {
@@ -94,6 +72,39 @@ public class AdsForm extends HttpServlet {
         else writer.println("not ok");
 
     }
+
+    private static Car produceCarObjectFromParameters(Object obj){
+        JSONObject jsonObj = (JSONObject) obj;
+        String vin = (String) jsonObj.get("vin");
+        String manufacturer = (String) jsonObj.get("manufacturer");
+        String model = (String) jsonObj.get("modelName");
+        int releaseYear = (int) jsonObj.get("releaseYear");
+        String information = (String) jsonObj.get("information");
+        Double price = (double) jsonObj.get("price");
+        Car car = new Car(vin,manufacturer,model,releaseYear,information,price);
+
+        return car;
+    }
+
+    private static String formJsonStringToPrint(List<String> carAds){
+        int count = 0;
+        JSONObject resultJson = new JSONObject();
+        boolean noResult = true;
+        StringBuilder sBuilderResult = new StringBuilder();
+        for (Object s : carAds){
+            resultJson.put(ServletConstants.TABLE_COLUMN_NAMES[count], s);
+            count++;
+            if (count == ServletConstants.NUMBER_OF_COLUMNS){
+                sBuilderResult.append("<h1>" + resultJson.toJSONString() + "</h1>"+"\n");
+                noResult = false;
+                count = 0;
+            }
+        }
+        if (noResult) sBuilderResult.append("<h1>" + "No results" + "</h1>");
+
+        return sBuilderResult.toString();
+    }
+
 
     private static CarSearchParameter[] formCarParameters(HttpServletRequest req){
         CarSearchParameter[] carSearchParameters = new CarSearchParameter[ServletConstants.NUMBER_OF_SEARCH_CRITERIA];
