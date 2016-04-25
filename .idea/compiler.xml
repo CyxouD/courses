@@ -35,6 +35,9 @@
         <processorPath useClasspath="true" />
         <module name="topic16" />
       </profile>
+<<<<<<< HEAD
+>>>>>>> upstream/master
+=======
 >>>>>>> upstream/master
     </annotationProcessing>
     <bytecodeTargetLevel>

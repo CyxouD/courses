@@ -173,4 +173,56 @@
 * Разбор предыдущих ДЗ в классе
 
 [ДЗ #16](https://github.com/rxn1d/courses/blob/master/topic16/topic16_home_work.md)
+<<<<<<< HEAD
 * Покрываем тестами ваше веб-приложение
+=======
+* Покрываем тестами ваше веб-приложение
+
+17\. Паттерны проектирования
+
+[ДЗ #17](https://github.com/rxn1d/courses/blob/master/topic17/topic17_home_work.md)
+* Реализуем паттерн Memento для рулетки
+
+18\. OOD
+
+[ДЗ #18](https://github.com/rxn1d/courses/blob/master/topic18/topic18_home_work.md)
+* Пишем свинговое приложение
+
+19\. Многопоточность и паралелизм
+* Какая польза от многопоточности
+* Какая цена многопоточности
+* В чем разница между паралелизмом и concurrency
+* Основы многопоточности с точки зрения архитектуры компьюютера
+* Многопточность с точки зрения ОС
+* Что такое поток и процесс в ОС
+* Возможные состояния потока
+* Многопоточность с точки зрения Java
+* Создание потоков
+* Гонка (Race conditions)
+* Проблема общих данных
+* Синхноризация
+* Wait, notify, notifyAll
+
+[ДЗ #19](https://github.com/rxn1d/courses/blob/master/topic19/topic19_home_work.md)
+* Улучшаем наше приложение с шариками
+
+20\. Многопоточность с практической точки зрения
+* Thread.sleep
+* Atomics
+* Синхронизация
+  + Ключевое слово synhronize
+  + Synhronize блок кода
+  + Synhronize метод
+  + Synhronize статический метод
+  + Ограничения синхронизации
+* Volatile
+  + Видимость данных
+  + Гарантированная видимость с volatile
+  + Принцип Happens Before
+  + Почему volatile не всегда достаточно?
+* Общение между потоками
+
+[ДЗ #20](https://github.com/rxn1d/courses/blob/master/topic20/topic20_home_work.md)
+* Приложение для визуализации алгоритмов сортировки
+* Приложение типа producer-consumer
+>>>>>>> upstream/master
