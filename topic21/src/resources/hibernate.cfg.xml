@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration SYSTEM
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">
+      org.hibernate.dialect.MySQLDialect
+    </property>
+    <property name="hibernate.connection.driver_class">
+      com.mysql.jdbc.Driver
+    </property>
+
+    <property name="hibernate.connection.url">
+      jdbc:mysql://localhost/usedcarstrade
+    </property>
+    <property name="hibernate.connection.username">
+      root
+    </property>
+    <property name="hibernate.connection.password">
+      root
+    </property>
+      <property name="hibernate.connection.pool_size">
+          10
+      </property>
+
+
+    <!-- List of XML mapping files -->
+    <mapping resource="CarNew.hbm.xml"/>
+      <mapping resource="Car_Owner.hbm.xml"/>
+      <mapping resource="Car_Ad.hbm.xml"/>
+
+  </session-factory>
+</hibernate-configuration>

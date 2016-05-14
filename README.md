@@ -225,4 +225,13 @@
 [ДЗ #20](https://github.com/rxn1d/courses/blob/master/topic20/topic20_home_work.md)
 * Приложение для визуализации алгоритмов сортировки
 * Приложение типа producer-consumer
+<<<<<<< HEAD
+>>>>>>> upstream/master
+=======
+
+21\. Еще о многопточности
+
+[ДЗ #21](https://github.com/rxn1d/courses/blob/master/topic21/topic21_home_work.md)
+* Решаем тесты
+* Знакомимся с Hibernate
 >>>>>>> upstream/master

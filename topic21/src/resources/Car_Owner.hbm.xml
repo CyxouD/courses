@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+  <class name="db.CarOwner" table="car_owner">
+    <id column="owner_id" name="owner_id" type="integer">
+     <generator class="increment"/>
+    </id>
+    <property column="owner_name" name="name" type="string"/>
+    <property column="owner_surname" name="surname" type="string"/>
+    <property column="owner_phone" name="phone" type="string"/>
+
+      <set name="cars" cascade="all">
+          <key column="owner_id"/>
+          <one-to-many class="db.CarNew"/>
+      </set>
+
+  </class>
+</hibernate-mapping>

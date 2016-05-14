@@ -1,0 +1,21 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+    http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!--Актуальная версия maven-->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--ID огранизации или проекта. Обычно совпадает с именем основного пакета-->
+    <!--Точка является разделителем директории в репозитории.-->
+    <groupId>com.courses.spalah</groupId>
+    <!--Имя проекта. Используется для идентификации отдельных проектов в пределах одной группы-->
+    <!--Находит в поддиректории группы.-->
+    <artifactId>maven-simple</artifactId>
+    <!--Версия проекта. Проект может содержать неограниченное кол-во релизов (версий).-->
+    <!--Версия также является поддиректорией в репозитории и добавляется к имени артифакта.-->
+    <version>1.0.0</version>
+    <!--Этот проект будет собран в директории:-->
+    <!--MAVEN_REPO/com.courses.spalah/1.0.0/maven-simple-1.0.0.jar-->
+
+</project>
