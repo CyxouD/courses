@@ -16,7 +16,14 @@
         <option value="$PROJECT_DIR$/topic12/pom.xml" />
         <option value="$PROJECT_DIR$/topic14/pom.xml" />
         <option value="$PROJECT_DIR$/topic16/pom.xml" />
+        <option value="$PROJECT_DIR$/topic23/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/topic23/native-annotations/pom.xml" />
+        <option value="$PROJECT_DIR$/topic23/native-xml/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
